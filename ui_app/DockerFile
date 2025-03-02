@@ -1,0 +1,25 @@
+# Use Node.js v16 as the base image
+FROM node:16
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json ./
+
+# Install all dependencies (including devDependencies) needed for the build
+RUN npm install
+
+COPY . .
+
+# Build the Angular app
+RUN npm run build
+
+# Install a lightweight HTTP server to serve the static files
+RUN npm install -g serve
+
+# Expose the port
+EXPOSE 3000
+
+# Serve the built app
+CMD ["serve", "-s", "dist/test-app", "-l", "3000"]
